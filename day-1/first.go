@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"os"
 	"io/ioutil"
+	"os"
+	"strconv"
 	"strings"
 )
 
@@ -13,7 +13,7 @@ func main() {
 
 	var sum int
 
-	for _, v := range(strings.Split(t, "\n")){
+	for _, v := range strings.Split(t, "\n") {
 		var num []int
 		for i := 0; i < len(v); i++ {
 			n, err := strconv.Atoi(string(v[i]))
@@ -22,7 +22,7 @@ func main() {
 			}
 		}
 		if len(num) > 0 {
-			sum += num[0] * 10 + num[len(num)-1]
+			sum += num[0]*10 + num[len(num)-1]
 		}
 	}
 	fmt.Println(sum)
@@ -30,9 +30,9 @@ func main() {
 
 func readFile() string {
 	data, err := ioutil.ReadFile(os.Args[1])
-    if err != nil {
-        fmt.Println("Can't read file:", os.Args[1])
-        panic(err)
-    }
-    return string(data)
+	if err != nil {
+		fmt.Println("Can't read file:", os.Args[1])
+		panic(err)
+	}
+	return string(data)
 }
