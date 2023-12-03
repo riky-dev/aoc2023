@@ -1,68 +1,74 @@
 package main
 
 import (
-        "fmt"
-        "io/ioutil"
-        "os"
-        "strconv"
-        "strings"
-	"unicode"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
+	"strings"
+	// "unicode"
 )
 
+type numberData struct {
+	Line  int
+	Start int
+	End   int
+	Value []int
+}
+
 func main() {
-        t := readFile()
+	lines := strings.Split(readFile(), "\n")
 
-        var sum int
+	fmt.Println(getNumbersDetails(lines))
 
-	lines := strings.Split(t, "\n")
+}
 
-        for i, v := range lines {
-                if v == "" {
-                        break
-                }
-
-		elements := strings.Split(v, ".")
-
-		for j, e := range(elements){
-			var isPartNumber bool
-
-			n, err := strconv.Atoi(e)
+func getNumbersDetails(lines []string) (numData []numberData) {
+	currentNum := numberData{
+		Line:  -1,
+		Start: -1,
+		End:   -1,
+		Value: make([]int, 3),
+	}
+	var numValue []int
+	for i, l := range lines {
+		for j, c := range l {
+			digit, err := strconv.Atoi(string(c))
 			if err == nil {
-				// Up above
-				if i > 0 {
-					fmt.Println("PREVIOUS LINE: ", lines[i-1])
-					fmt.Println("CURRENT  LINE: ", lines[i])
-					//fmt.Println("CHAR ABOVE: ", rune(lines[i-1][j]))
-					if string(lines[i-1][j]) != "" && !unicode.IsDigit(rune(lines[i-1][j])) {
-						isPartNumber = true
-					}
-				// Up left
-				// Up right
+				if currentNum.Line < 0 && currentNum.Start < 0 {
+					currentNum.Line = i
+					currentNum.Start = j
 				}
-//				if i < len(v)-1 {
-//					if string(lines[i+1][j]) != "" && !unicode.IsDigit(rune(lines[i+1][j])) {
-//						isPartNumber = true
-//					}
-//				}
-				// Down below
-				// Down left
-				// Down right
+				numValue = append(numValue, digit)
+				_, err := strconv.Atoi(string(l[j+1]))
+				if err != nil {
+					currentNum.End = i
+				}
+			} else {
+				if currentNum.End >= 0 {
+					numData = append(numData, currentNum)
+				} else {
+					numData = append(numData, currentNum)
+					currentNum = numberData{
+						Line:  -1,
+						Start: -1,
+						End:   -1,
+						Value: make([]int, 3),
+					}
+				}
+
 			}
 
-			if isPartNumber {
-				// fmt.Println(v)
-				sum += n
-			}
 		}
 	}
-	fmt.Println(sum)
+	return
 }
 
 func readFile() string {
-        data, err := ioutil.ReadFile(os.Args[1])
-        if err != nil {
-                fmt.Println("Can't read file:", os.Args[1])
-                panic(err)
-        }
-        return string(data)
+	data, err := ioutil.ReadFile(os.Args[1])
+	if err != nil {
+		fmt.Println("Can't read file:", os.Args[1])
+		panic(err)
+	}
+	return string(data)
 }
