@@ -46,8 +46,10 @@ func getNumbersDetails(lines []string) (numData []numberData) {
 				}
 			} else {
 				if currentNum.End >= 0 {
-					numData = append(numData, currentNum)
-				} else {
+					for k := 0; k < len(numValue){
+						
+					}
+					currentNum.Value
 					numData = append(numData, currentNum)
 					currentNum = numberData{
 						Line:  -1,
@@ -55,6 +57,7 @@ func getNumbersDetails(lines []string) (numData []numberData) {
 						End:   -1,
 						Value: make([]int, 3),
 					}
+				} else {
 				}
 
 			}
