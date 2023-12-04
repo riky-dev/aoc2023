@@ -2,36 +2,38 @@ package main
 
 import (
 	"fmt"
-	"strings"
-	"os"
 	"io/ioutil"
+	"math"
+	"os"
 	"strconv"
+	"strings"
 )
 
 func main() {
-	// points := 0
+	points := 0
 
 	file := readFile()
 
 	lines := strings.Split(file, "\n")
 
-	for _, l := range(lines) {
-		if l == ""{
+	for _, l := range lines {
+		if l == "" {
 			break
 		}
+
 		nums := strings.Split(l, ": ")[1]
 
-		fmt.Println(nums)
+		splitNums := strings.Split(nums, " ")
 
 		var wNum []int
 		var hNum []int
 
-		for _, n := range(nums) {
-			if n == ' ' {
+		isCheckingWinning := true
+		for _, v := range splitNums {
+			if v == "" {
 				continue
 			}
-			nValue, err := strconv.Atoi(string(n))
-			isCheckingWinning := true
+			nValue, err := strconv.Atoi(v)
 			if err == nil {
 				if isCheckingWinning {
 					wNum = append(wNum, nValue)
@@ -39,12 +41,24 @@ func main() {
 					hNum = append(hNum, nValue)
 				}
 			} else {
-				fmt.Println(err)
 				isCheckingWinning = false
 			}
 		}
-		fmt.Println(wNum, hNum)
+
+		var winningNumbers int
+		for _, n1 := range wNum {
+			for _, n2 := range hNum {
+				if n1 == n2 {
+					winningNumbers++
+				}
+			}
+		}
+
+		points += int(math.Pow(2, float64(winningNumbers-1)))
+
+		// fmt.Println(wNum, hNum)
 	}
+	fmt.Println(points)
 }
 
 func readFile() string {
